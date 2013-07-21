@@ -1,5 +1,6 @@
 <?php
 return array(
+		
 		'router' => array(
 				'routes' => array(
 						'design' => array(
@@ -8,6 +9,16 @@ return array(
 										'route'    => '/design',
 										'defaults' => array(
 												'controller' => 'Design\Controller\Index',
+												'action'     => 'index',
+										),
+								),
+						),
+						'design/challenge' => array(
+								'type'    => 'segment',
+								'options' => array(
+										'route'    => '/design/challenge[/][:action][/:id]',
+										'defaults' => array(
+												'controller' => 'Design\Controller\Challenge',
 												'action'     => 'index',
 										),
 								),
