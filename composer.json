@@ -9,7 +9,10 @@
     "homepage": "http://framework.zend.com/",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": ">2.2.0rc1"
+        "zendframework/zendframework": ">2.2.0rc1",
+        "zendframework/zend-developer-tools": "dev-master",
+        "doctrine/doctrine-orm-module": "0.7.*",
+        "zf-commons/zfc-user": "dev-master"
     },
 	"autoload": {
 		"psr-0": { "Application": "module/Application/src/", "Design": "module/Design/src/" }

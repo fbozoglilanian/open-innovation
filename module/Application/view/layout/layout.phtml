@@ -32,7 +32,16 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                            <li class="active"><a href="<?php echo $this->url('design') ?>"><?php echo $this->translate('Design') ?></a></li>
+                            <li><a href="<?php echo $this->url('design') ?>"><?php echo $this->translate('Design') ?></a></li>
+                            <li>
+							<?php if(!$this->zfcUserIdentity()): ?>
+								<a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Sign In'); ?></a>
+							<?php else: ?>
+							    <!-- display the 'display name' of the user -->
+							    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+							    <a href="<?php echo $this->url('zfcuser/logout') ?>"><?php echo $this->translate('Sign Out'); ?></a>
+							<?php endif?>
+							</li>
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
