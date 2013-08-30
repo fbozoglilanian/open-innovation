@@ -14,8 +14,28 @@ use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
+	/**
+	 * 
+	 * @var ChallengeTable
+	 */
+	private $_challengeTable = null;
+	
     public function indexAction()
     {
-        return new ViewModel();
+        return new ViewModel(array(
+            'lastChallenges' => array() //$this->getChallengeTable()->getLastChallenges(5)
+        ));
+    }
+    /**
+     * 
+     * @return ChallengeTable <object, multitype:>
+     */
+    public function getChallengeTable()
+    {
+    	if (is_null($this->_challengeTable)) {
+    		$sm = $this->getServiceLocator();
+    		$this->_challengeTable = $sm->get('Design\Model\ChallengeTable');
+    	}
+    	return $this->_challengeTable;
     }
 }

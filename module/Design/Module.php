@@ -11,6 +11,11 @@ namespace Design;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 
+use Design\Model\Challenge;
+use Design\Model\ChallengeTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+
 class Module
 {
     public function onBootstrap(MvcEvent $e)
@@ -34,5 +39,24 @@ class Module
                 ),
             ),
         );
+    }
+    // Add this method:
+    public function getServiceConfig()
+    {
+    	return array(
+    			'factories' => array(
+    					'Design\Model\ChallengeTable' =>  function($sm) {
+    						$tableGateway = $sm->get('ChallengeTableGateway');
+    						$table = new ChallengeTable($tableGateway);
+    						return $table;
+    					},
+    					'ChallengeTableGateway' => function ($sm) {
+    						$dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+    						$resultSetPrototype = new ResultSet();
+    						$resultSetPrototype->setArrayObjectPrototype(new Challenge());
+    						return new TableGateway('challenge', $dbAdapter, null, $resultSetPrototype);
+    					},
+    			),
+    	);
     }
 }

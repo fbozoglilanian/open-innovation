@@ -1,0 +1,16 @@
+<?php
+
+$title = $this->translate('Add new challenge');
+$this->headTitle($title);
+?>
+<h1><?php echo $this->escapeHtml($title); ?></h1>
+<?php
+$form->setAttribute('action', '/design/challenge/add');
+$form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('challenge_id'));
+echo $this->formRow($form->get('challenge'));
+echo $this->formRow($form->get('motivation'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
