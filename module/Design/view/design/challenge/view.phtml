@@ -1,6 +1,7 @@
-<div class="row">
-	<?php $this->escapeHtml($challenge->challenge) ?>
-	<?php $this->escapeHtml($challenge->motivation) ?>
-	<?php $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?>
+<div class="challenge card">
+
+	<h1><?php echo $this->escapeHtml($challenge->challenge) ?></h1>
+	<p><?php echo $this->escapeHtml($challenge->motivation) ?></p>
+	<time><?php echo $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?></time>
 			
 </div>

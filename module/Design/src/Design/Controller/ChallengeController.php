@@ -75,6 +75,7 @@ class ChallengeController extends AbstractActionController
 				return $this->redirect()->toUrl('/design/challenge');
 			}
 			$challenge = $this->getChallengeTable()->getChallenge($id);
+			return array('challenge' => $challenge);
 		}
 		 
 	}
