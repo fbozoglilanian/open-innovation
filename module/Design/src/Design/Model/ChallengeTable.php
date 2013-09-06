@@ -7,68 +7,68 @@ use Zend\Db\Sql\Select;
 class ChallengeTable
 {
 	/**
-	 * 
+	 *
 	 * @var TableGateway
 	 */
-    protected $tableGateway;
+	protected $tableGateway;
 
-    public function __construct(TableGateway $tableGateway)
-    {
-        $this->tableGateway = $tableGateway;
-    }
-    
-   public function getLastFive()
-    {
-     	$resultSet = $this->tableGateway->select(function (Select $select) {
-     		$select->order('date_added DESC')->limit(5);
-     		return $select;
-     	});
-     	return $resultSet;
-     }
-    
-    public function fetchAll()
-    {
-        $resultSet = $this->tableGateway->select();
-        return $resultSet;
-    }
+	public function __construct(TableGateway $tableGateway)
+	{
+		$this->tableGateway = $tableGateway;
+	}
 
-    public function getChallenge($id)
-    {
-        $id  = (int) $id;
-        $rowset = $this->tableGateway->select(array('challenge_id' => $id));
-        $row = $rowset->current();
-        if (!$row) {
-            throw new \Exception("Could not find row $id");
-        }
-        return $row;
-    }
+	public function getLastFive()
+	{
+		$resultSet = $this->tableGateway->select(function (Select $select) {
+			$select->order('date_added DESC')->limit(5);
+			return $select;
+		});
+		return $resultSet;
+	}
 
-    public function saveChallenge(Challenge $challenge)
-    {
-        $data = array(
-            'challenge' => $challenge->challenge,
-        	'motivation' => $challenge->motivation,
-        	'user_id' => $challenge->userId,
-        );
+	public function fetchAll()
+	{
+		$resultSet = $this->tableGateway->select();
+		return $resultSet;
+	}
 
-        $id = (int)$album->id;
-        if ($id == 0) {
-        	$challenge->dateAdded = $data['date_added'] = date("Y-m-d H:i:s", time());
-            $this->tableGateway->insert($data);
-            $id = $this->tableGateway->getLastInsertValue();
-        } else {
-            if ($this->getChallenge($id)) {
-            	$challenge->dateEdited = $data['date_edited'] = date("Y-m-d H:i:s", time());
-                $this->tableGateway->update($data, array('id' => $id));
-            } else {
-                throw new \Exception('Challenge id does not exist');
-            }
-        }
-        return $id;
-    }
+	public function getChallenge($id)
+	{
+		$id  = (int) $id;
+		$rowset = $this->tableGateway->select(array('challenge_id' => $id));
+		$row = $rowset->current();
+		if (!$row) {
+			throw new \Exception("Could not find row $id");
+		}
+		return $row;
+	}
 
-//     public function deleteAlbum($id)
-//     {
-//         $this->tableGateway->delete(array('id' => $id));
-//     }
+	public function saveChallenge(Challenge $challenge)
+	{
+		$data = array(
+				'challenge' => $challenge->challenge,
+				'motivation' => $challenge->motivation,
+				'user_id' => $challenge->userId,
+		);
+
+		$id = (int)$album->id;
+		if ($id == 0) {
+			$challenge->dateAdded = $data['date_added'] = date("Y-m-d H:i:s", time());
+			$this->tableGateway->insert($data);
+			$id = $this->tableGateway->getLastInsertValue();
+		} else {
+			if ($this->getChallenge($id)) {
+				$challenge->dateEdited = $data['date_edited'] = date("Y-m-d H:i:s", time());
+				$this->tableGateway->update($data, array('id' => $id));
+			} else {
+				throw new \Exception('Challenge id does not exist');
+			}
+		}
+		return $id;
+	}
+
+	//     public function deleteAlbum($id)
+	//     {
+	//         $this->tableGateway->delete(array('id' => $id));
+	//     }
 }
