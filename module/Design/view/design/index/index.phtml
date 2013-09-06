@@ -13,7 +13,9 @@
 		<?php if (count($lastChallenges)>0): ?>
 		<ul>
 			<?php foreach ($lastChallenges as $challenge): ?>
-			<li><?php $this->escapeHtml($challenge->challenge) ?> - <?php $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?></li>
+			<li>
+                            <a href="/design/challenge/view/<?php echo $this->escapeHtml($challenge->id) ?>" >
+                            <?php echo $this->escapeHtml($challenge->challenge) ?> - <?php echo $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?></a></li>
 			<?php endforeach; ?>
 		</ul>
 		<?php endif; ?>

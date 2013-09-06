@@ -2,6 +2,7 @@
 namespace Design\Model;
 
 use Zend\Db\TableGateway\TableGateway;
+use Zend\Db\Sql\Select;
 
 class ChallengeTable
 {
@@ -16,15 +17,14 @@ class ChallengeTable
         $this->tableGateway = $tableGateway;
     }
     
-//     public function getLastChallenges($limit = 5)
-//     {
-//     	$resultSet = $this->tableGateway->select(function (Select $select) {
-//     		$select->order('date_added ASC')->limit((int) $limit);
-//     		return $select;
-//     	});
-//     		$resultSet->
-//     	return $resultSet;
-//     }
+   public function getLastFive()
+    {
+     	$resultSet = $this->tableGateway->select(function (Select $select) {
+     		$select->order('date_added DESC')->limit(5);
+     		return $select;
+     	});
+     	return $resultSet;
+     }
     
     public function fetchAll()
     {

@@ -23,7 +23,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         return new ViewModel(array(
-            'lastChallenges' => array() //$this->getChallengeTable()->getLastChallenges(5)
+            'lastChallenges' => $this->getChallengeTable()->getLastFive()
         ));
     }
     /**
