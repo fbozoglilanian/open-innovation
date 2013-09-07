@@ -4,4 +4,8 @@ README.txt
 demos/
 extras/documentation
 vendor
-.gitignore
+.buildpath
+.project
+.gitmodules
+.settings/
+composer.lock
