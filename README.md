@@ -1,6 +1,3 @@
-ZendSkeletonApplication
-=======================
-
 Introduction
 ------------
 Daedalus is an open innovation tool based on Design Thinking process.
