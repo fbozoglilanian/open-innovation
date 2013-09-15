@@ -13,6 +13,8 @@ use Zend\Mvc\MvcEvent;
 
 use Design\Model\Challenge;
 use Design\Model\ChallengeTable;
+use Design\Model\ChallengeComment;
+use Design\Model\ChallengeCommentTable;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 
@@ -40,7 +42,6 @@ class Module
             ),
         );
     }
-    // Add this method:
     public function getServiceConfig()
     {
     	return array(
@@ -55,6 +56,17 @@ class Module
     						$resultSetPrototype = new ResultSet();
     						$resultSetPrototype->setArrayObjectPrototype(new Challenge());
     						return new TableGateway('challenge', $dbAdapter, null, $resultSetPrototype);
+    					},
+    					'Design\Model\ChallengeCommentTable' =>  function($sm) {
+    					    $tableGateway = $sm->get('ChallengeCommentTableGateway');
+    					    $table = new ChallengeCommentTable($tableGateway);
+    					    return $table;
+    					},
+    					'ChallengeCommentTableGateway' => function ($sm) {
+    					    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+    					    $resultSetPrototype = new ResultSet();
+    					    $resultSetPrototype->setArrayObjectPrototype(new ChallengeComment());
+    					    return new TableGateway('challenge_comment', $dbAdapter, null, $resultSetPrototype);
     					},
     			),
     	);
