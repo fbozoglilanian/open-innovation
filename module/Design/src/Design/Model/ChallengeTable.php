@@ -51,7 +51,7 @@ class ChallengeTable
 				'user_id' => $challenge->userId,
 		);
 
-		$id = (int)$album->id;
+		$id = (int)$challenge->id;
 		if ($id == 0) {
 			$challenge->dateAdded = $data['date_added'] = date("Y-m-d H:i:s", time());
 			$this->tableGateway->insert($data);

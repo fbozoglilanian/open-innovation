@@ -1,7 +1,29 @@
-<div class="challenge card">
+<?php 
+$this->headScript()->appendFile(
+                    '/js/design/challenge/view.js',
+                    'text/javascript'
+                );
+?>
+<div class="challenge">
 
 	<h1><?php echo $this->escapeHtml($challenge->challenge) ?></h1>
 	<p><?php echo $this->escapeHtml($challenge->motivation) ?></p>
 	<time><?php echo $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?></time>
+	
+	<div class="challenge comments">
+    <h2>Comments:</h2>
+    <div class="comment form">
+        <?php
+        $commentForm->prepare();
+        
+        echo $this->form()->openTag($commentForm);
+        echo $this->formHidden($commentForm->get('challenge_id'));
+        echo $this->formRow($commentForm->get('comment'));
+        echo $this->formSubmit($commentForm->get('submit'));
+        echo $this->form()->closeTag();
+        ?>
+    </div>
+    <div id="comments"><?php echo $this->translate("Loading...") ?></div>
+</div>
 			
 </div>

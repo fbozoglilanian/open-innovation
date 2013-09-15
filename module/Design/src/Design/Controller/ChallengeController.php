@@ -14,7 +14,10 @@ use Zend\View\Model\ViewModel;
 use Design\Model\ChallengeTable;
 use Design\Form\ChallengeForm;
 use Design\Model\Challenge;
-
+use Design\Model\ChallengeCommentTable;
+use Design\Form\ChallengeCommentForm;
+use Design\Model\ChallengeComment;
+use Zend\View\Model\JsonModel;
 
 class ChallengeController extends AbstractActionController
 {
@@ -23,6 +26,12 @@ class ChallengeController extends AbstractActionController
 	 * @var ChallengeTable
 	 */
 	private $_challengeTable = null;
+	
+	/**
+	 * 
+	 * @var ChallengeCommentTable
+	 */
+	private $_challengeCommentTable = null;
 
 	public function indexAction()
 	{
@@ -64,6 +73,89 @@ class ChallengeController extends AbstractActionController
 			return array('form' => $form);
 		}
 	}
+	
+	
+	public function addCommentAction()
+	{
+	    if (!$this->zfcUserAuthentication()->hasIdentity()) {
+	        $this->getResponse()->setStatusCode(403); //not authorized
+	        return;
+	    } else {
+	        
+	        $request = $this->getRequest();
+	        $success = FALSE;
+	        $messages = array("Unknwon error");
+	        
+	        if ($request->isPost()) {
+	            $form = new ChallengeCommentForm();
+	            $form->get('submit')->setValue('Add');
+	            
+	            $comment = new ChallengeComment();
+	            $form->setInputFilter($comment->getInputFilter());
+	
+	            $data = $request->getPost();
+	            $data["user_id"] = $this->zfcUserAuthentication()->getIdentity()->getId();
+	
+	            $form->setData($data);
+	
+	            if ($form->isValid()) {
+	                $comment->exchangeArray($form->getData());
+	                $this->getChallengeCommentTable()->addComment($comment);
+	                $success = TRUE;
+	                $messages = array("Comment Added");
+	            } else {
+	                $messages = $form->getMessages();
+	                $success = FALSE;
+	                $comment = null;
+	            }
+	            
+	        }
+	        $result = array(
+	                'messages'   => $messages,
+	                'success'    => $success,
+	                'comment'    => $comment
+	        );
+	         
+	        $jsonModel = new JsonModel($result);
+	        
+	        echo $jsonModel->serialize(); exit();
+	    }
+	}
+	
+	public function getCommentsAction()
+	{
+	    if (!$this->zfcUserAuthentication()->hasIdentity()) {
+	        $this->getResponse()->setStatusCode(403); //not authorized
+	        return;
+	    } else {
+	         
+	        $request = $this->getRequest();
+	        $challengeId = $this->getRequest()->getPost('challenge_id');
+	        $comments = array();
+	        $commentsRS = $this->getChallengeCommentTable()->getComments($challengeId);
+	        
+	        $message = "";
+	        if ($commentsRS->count() == 0) {
+	            $success = false;
+	            $message = "Be the first to leave a comment";
+	        } else {
+	            $success = true;
+	            foreach ($commentsRS as $comment) {
+	                $comments[] = $comment;
+	            }
+	        }
+	        
+	        $result = array(
+	                'success' => $success,
+	                'message' => $message,
+	                'comments' => $comments
+	        );
+	
+	        $jsonModel = new JsonModel($result);
+	         
+	        echo $jsonModel->serialize(); exit();
+	    }
+	}
 
 	public function viewAction()
 	{
@@ -74,8 +166,17 @@ class ChallengeController extends AbstractActionController
 			if (!$id) {
 				return $this->redirect()->toUrl('/design/challenge');
 			}
+			$request = $this->getRequest();
+			$form = new ChallengeCommentForm();
+			$data = $request->getPost();
+			$data["user_id"] = $this->zfcUserAuthentication()->getIdentity()->getId();
+			$data["challenge_id"] = $id;
+			
+			$form->setData($data);
+			$form->get('submit')->setValue('Add');
+			
 			$challenge = $this->getChallengeTable()->getChallenge($id);
-			return array('challenge' => $challenge);
+			return array('challenge' => $challenge, 'commentForm' => $form);
 		}
 		 
 	}
@@ -90,5 +191,17 @@ class ChallengeController extends AbstractActionController
 			$this->_challengeTable = $sm->get('Design\Model\ChallengeTable');
 		}
 		return $this->_challengeTable;
+	}
+	/**
+	 *
+	 * @return ChallengeCommentTable <object, multitype:>
+	 */
+	public function getChallengeCommentTable()
+	{
+	    if (is_null($this->_challengeCommentTable)) {
+	        $sm = $this->getServiceLocator();
+	        $this->_challengeCommentTable = $sm->get('Design\Model\ChallengeCommentTable');
+	    }
+	    return $this->_challengeCommentTable;
 	}
 }
