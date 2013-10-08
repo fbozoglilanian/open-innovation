@@ -1,3 +1,5 @@
+Open Innovation Project
+================================
 Introduction
 ------------
 Daedalus is an open innovation tool based on Design Thinking process.
@@ -12,12 +14,16 @@ The goal is to create five tools:
 
 Installation
 ------------
-GIT
-------------
-git clone https://fabian.bozoglian@code.google.com/p/open-innovation/ 
+
+git clone https://fabian.bozoglian@code.google.com/p/open-innovation/
+
+Then run composer (php composer.phar install) to download the library needed.
+
 
 Virtual Host
-------------
+-----------
+
+```
 <VirtualHost *:80>
     ServerName daedalus.local
     DocumentRoot "path/to/daedalus/public"
@@ -29,3 +35,8 @@ Virtual Host
         Allow from all
     </Directory>
 </VirtualHost>
+```
+Also add this line to your hosts file.
+```
+127.0.0.1 daedalus.local
+```
