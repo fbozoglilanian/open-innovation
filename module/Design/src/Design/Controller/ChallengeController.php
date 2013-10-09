@@ -172,11 +172,14 @@ class ChallengeController extends AbstractActionController
 			$data["user_id"] = $this->zfcUserAuthentication()->getIdentity()->getId();
 			$data["challenge_id"] = $id;
 			
+			$useService = $this->getServiceLocator()->get('zfcuser_user_mapper');
+			$creator = $useService->findById($data["user_id"]);
+			
 			$form->setData($data);
 			$form->get('submit')->setValue('Add');
 			
 			$challenge = $this->getChallengeTable()->getChallenge($id);
-			return array('challenge' => $challenge, 'commentForm' => $form);
+			return array('challenge' => $challenge, 'creator' => $creator, 'commentForm' => $form);
 		}
 		 
 	}

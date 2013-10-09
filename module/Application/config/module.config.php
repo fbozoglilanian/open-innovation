@@ -20,6 +20,16 @@ return array(
                     ),
                 ),
             ),
+            'profile' => array(
+                    'type'    => 'segment',
+                    'options' => array(
+                            'route'    => '/profile[/:id]',
+                            'defaults' => array(
+                                    'controller' => 'Application\Controller\Profile',
+                                    'action'     => 'view',
+                            ),
+                    ),
+            ),
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -74,6 +84,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Application\Controller\Index' => 'Application\Controller\IndexController',
+            'Application\Controller\Profile' => 'Application\Controller\ProfileController',
         ),
     ),
     'view_manager' => array(

@@ -24,7 +24,9 @@ class Challenge implements InputFilterAwareInterface
         $this->userId = (isset($data['user_id'])) ? $data['user_id'] : null;
         $this->motivation  = (isset($data['motivation'])) ? $data['motivation'] : "";
         $this->dateAdded  = (isset($data['date_added'])) ? $data['date_added'] : null;
-        $this->dateEdited  = (isset($data['date_edited'])) ? $data['date_edited'] : null;    
+        $this->dateEdited  = (isset($data['date_edited'])) ? $data['date_edited'] : null;
+        
+        
     }
     
 

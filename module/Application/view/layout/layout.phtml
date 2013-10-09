@@ -38,7 +38,7 @@
 								<a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Sign In'); ?></a>
 							<?php else: ?>
 							    <!-- display the 'display name' of the user -->
-							    <?php echo $this->zfcUserIdentity()->getDisplayname(); ?>
+							    <a href="<?php echo $this->url('zfcuser') ?>"><?php echo $this->zfcUserIdentity()->getDisplayname(); ?></a>
 							    <a href="<?php echo $this->url('zfcuser/logout') ?>"><?php echo $this->translate('Sign Out'); ?></a>
 							<?php endif?>
 							</li>
