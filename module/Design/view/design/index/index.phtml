@@ -24,8 +24,9 @@
 			<?php foreach ($lastChallenges as $challenge): ?>
 			<li><a
 				href="/design/challenge/view/<?php echo $this->escapeHtml($challenge->id) ?>">
-					<?php echo $this->escapeHtml($challenge->challenge) ?> - <?php echo $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?>
+					<?php echo $this->escapeHtml($challenge->challenge) ?> - <?php echo $this->escapeHtml(date("Y-m-d", $challenge->dateAdded->getTimestamp())) ?>
 			</a></li>
+			
 			<?php endforeach; ?>
 		</ul>
 		<?php endif; ?>

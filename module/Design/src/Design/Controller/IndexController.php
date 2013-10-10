@@ -11,31 +11,44 @@ namespace Design\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Doctrine\ORM\EntityManager;
 
 class IndexController extends AbstractActionController
 {
-	/**
-	 *
-	 * @var ChallengeTable
-	 */
-	private $_challengeTable = null;
 
-	public function indexAction()
-	{
-		return new ViewModel(array(
-				'lastChallenges' => $this->getChallengeTable()->getLastFive()
-		));
-	}
-	/**
-	 *
-	 * @return ChallengeTable <object, multitype:>
-	 */
-	public function getChallengeTable()
-	{
-		if (is_null($this->_challengeTable)) {
-			$sm = $this->getServiceLocator();
-			$this->_challengeTable = $sm->get('Design\Model\ChallengeTable');
-		}
-		return $this->_challengeTable;
-	}
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
+    protected $em;
+
+    public function setEntityManager(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    /**
+     *
+     * @return Doctrine\ORM\EntityManager
+     */
+    public function getEntityManager()
+    {
+        if (null === $this->em) {
+            $this->em = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
+        }
+        return $this->em;
+    }
+
+
+    public function indexAction()
+    {
+        return new ViewModel(array(
+                'lastChallenges' => $this->getEntityManager()
+                ->getRepository('Design\Entity\Challenge')
+                ->findBy(
+                        array(),
+                        array('dateAdded' => 'DESC'),
+                        5
+                )
+        ));
+    }
 }

@@ -8,10 +8,10 @@ $this->headScript()->appendFile(
 
 	<h1><?php echo $this->escapeHtml($challenge->challenge) ?></h1>
 	<span id="creatorUserName">
-        <a href="/profile/<?php echo $this->escapeHtml($creator->getId()) ?>"><?php echo $this->escapeHtml($creator->getDisplayName()) ?></a>
+        <a href="/profile/<?php echo $this->escapeHtml($challenge->user->id) ?>"><?php echo $this->escapeHtml($challenge->user->displayName) ?></a>
     </span>
 	<p><?php echo $this->escapeHtml($challenge->motivation) ?></p>
-	<time><?php echo $this->escapeHtml(date("Y-m-d", strtotime($challenge->dateAdded))) ?></time>
+	<time><?php echo $this->escapeHtml(date("Y-m-d", $challenge->dateAdded->getTimestamp())) ?></time>
 	
 	<div class="challenge comments">
     <h2>Comments:</h2>

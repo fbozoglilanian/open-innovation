@@ -5,6 +5,8 @@ return array(
         'Application',
     	'Design',
     	'ZendDeveloperTools',
+        'DoctrineModule',
+        'DoctrineORMModule',
     	'ZfcBase',
     	'ZfcUser'
     ),

@@ -19,6 +19,21 @@ return array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
         ),
     ),
+    // ORM settings DEFINE THIS in local.php
+    'doctrine' => array(
+            'connection' => array(
+                    'orm_default' => array(
+                            'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
+                            'params' => array(
+                                    'dbname'   => 'daedalus',
+                                    'charset' => 'utf8',
+                                    'driverOptions' => array(
+                                            1002=>'SET NAMES utf8'
+                                    )
+                            )
+                    )
+            )
+    ),
 	'auth_identity_fields' => array( 'email' ),
     'service_manager' => array(
         'factories' => array(
