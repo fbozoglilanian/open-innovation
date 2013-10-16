@@ -13,9 +13,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 use Design\Form\ChallengeForm;
-use Design\Model\ChallengeCommentTable;
 use Design\Form\ChallengeCommentForm;
-use Design\Model\ChallengeComment;
+use Design\Entity\ChallengeComment;
 use Zend\View\Model\JsonModel;
 use Doctrine\ORM\EntityManager;
 
@@ -44,6 +43,7 @@ class ChallengeController extends AbstractActionController
         }
         return $this->em;
     }
+
     /**
      * Add a challenge. Requires login
      * @author fbozoglilanian
@@ -71,8 +71,8 @@ class ChallengeController extends AbstractActionController
                     $data = $form->getData();
                     $data["date_added"] = new \DateTime(date("Y-m-d H:i:s", time()));
                     $data["user"] = $this->getEntityManager()
-                    ->getRepository('Application\Entity\User')
-                    ->find($this->zfcUserAuthentication()->getIdentity()->getId());
+                        ->getRepository('Application\Entity\User')
+                        ->find($this->zfcUserAuthentication()->getIdentity()->getId());
                     $challenge->populate($data);
                     $this->getEntityManager()->persist($challenge);
                     $this->getEntityManager()->flush();
@@ -92,15 +92,15 @@ class ChallengeController extends AbstractActionController
             $this->getResponse()->setStatusCode(403); //not authorized
             return;
         } else {
-             
+
             $request = $this->getRequest();
             $success = FALSE;
             $messages = array("Unknwon error");
-             
+
             if ($request->isPost()) {
                 $form = new ChallengeCommentForm();
                 $form->get('submit')->setValue('Add');
-                 
+
                 $comment = new ChallengeComment();
                 $form->setInputFilter($comment->getInputFilter());
 
@@ -110,8 +110,23 @@ class ChallengeController extends AbstractActionController
                 $form->setData($data);
 
                 if ($form->isValid()) {
-                    $comment->exchangeArray($form->getData());
-                    $this->getChallengeCommentTable()->addComment($comment);
+                    $data = $form->getData();
+
+                    $data["date_added"] = new \DateTime(date("Y-m-d H:i:s", time()));
+
+                    $data["challenge"] = $this->getEntityManager()
+                        ->getRepository('Design\Entity\Challenge')
+                        ->find($data["challenge_id"]);
+
+                    $data["user"] = $this->getEntityManager()
+                        ->getRepository('Application\Entity\User')
+                        ->find($this->zfcUserAuthentication()->getIdentity()->getId());
+
+                    $comment->populate();
+
+                    $this->getEntityManager()->persist($comment);
+                    $this->getEntityManager()->flush();
+
                     $success = TRUE;
                     $messages = array("Comment Added");
                 } else {
@@ -119,17 +134,18 @@ class ChallengeController extends AbstractActionController
                     $success = FALSE;
                     $comment = null;
                 }
-                 
+
             }
             $result = array(
-                    'messages'   => $messages,
-                    'success'    => $success,
-                    'comment'    => $comment
+                'messages' => $messages,
+                'success' => $success,
+                'comment' => $comment
             );
 
             $jsonModel = new JsonModel($result);
-             
-            echo $jsonModel->serialize(); exit();
+
+            echo $jsonModel->serialize();
+            exit();
         }
     }
 
@@ -141,30 +157,41 @@ class ChallengeController extends AbstractActionController
         } else {
 
             $request = $this->getRequest();
-            $challengeId = $this->getRequest()->getPost('challenge_id');
-            $comments = array();
-            $commentsRS = $this->getChallengeCommentTable()->getComments($challengeId);
-             
-            $message = "";
-            if ($commentsRS->count() == 0) {
-                $success = false;
-                $message = "Be the first to leave a comment";
-            } else {
-                $success = true;
-                foreach ($commentsRS as $comment) {
-                    $comments[] = $comment;
+
+            $challengeId = $this->getRequest()
+                ->getPost('challenge_id');
+
+            $success = false;
+            $message = "Be the first to leave a comment";
+
+            $challenge = $this->getEntityManager()
+                ->getRepository('Design\Entity\Challenge')
+                ->find($challengeId);
+
+            if (!is_null($challenge)) {
+                $query = $this->getEntityManager()
+                    ->createQuery('SELECT c FROM Design\Entity\ChallengeComment c WHERE c.challenge = ?1');
+                $query->setParameter(1, $challengeId);
+                $comments = $query->getResult();
+
+                $message = "";
+                if (count($comments) == 0) {
+                    $success = false;
+                    $message = "Be the first to leave a comment";
+                } else {
+                    $success = true;
                 }
             }
-             
             $result = array(
-                    'success' => $success,
-                    'message' => $message,
-                    'comments' => $comments
+                'success' => $success,
+                'message' => $message,
+                'comments' => $comments
             );
 
             $jsonModel = new JsonModel($result);
 
-            echo $jsonModel->serialize(); exit();
+            echo $jsonModel->serialize();
+            exit();
         }
     }
 
@@ -172,8 +199,8 @@ class ChallengeController extends AbstractActionController
     {
         if (!$this->zfcUserAuthentication()->hasIdentity()) {
             return $this->redirect()->toUrl("/user/login");
-        }else {
-            $id = (int) $this->params()->fromRoute('id', 0);
+        } else {
+            $id = (int)$this->params()->fromRoute('id', 0);
             if (!$id) {
                 return $this->redirect()->toUrl('/design/challenge');
             }
@@ -182,23 +209,24 @@ class ChallengeController extends AbstractActionController
             $data = $request->getPost();
             $data["user_id"] = $this->zfcUserAuthentication()->getIdentity()->getId();
             $data["challenge_id"] = $id;
-             
-            $useService = $this->getServiceLocator()->get('zfcuser_user_mapper');
-            $creator = $useService->findById($data["user_id"]);
-             
+
+            $challenge = $this->getEntityManager()
+                ->getRepository('Design\Entity\Challenge')
+                ->find($data["challenge_id"]);
+
             $form->setData($data);
             $form->get('submit')->setValue('Add');
-             
-             
-            $challenge = $this->getEntityManager()
-            ->getRepository('Design\Entity\Challenge')
-            ->find($id);
+
 
             return array(
-                    'challenge' => $challenge,
-                    'commentForm' => $form, //'creator' => $creator
+                'challenge' => $challenge,
+                'commentForm' => $form,
             );
         }
-         
+    }
+
+    private function getChallengeCommentsJSON($comments)
+    {
+
     }
 }
