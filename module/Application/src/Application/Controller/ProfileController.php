@@ -16,7 +16,7 @@ class ProfileController extends AbstractActionController
 {
 
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
 
@@ -27,7 +27,7 @@ class ProfileController extends AbstractActionController
 
     /**
      *
-     * @return Doctrine\ORM\EntityManager
+     * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager()
     {
@@ -44,8 +44,16 @@ class ProfileController extends AbstractActionController
             return $this->redirect()->toUrl('/');
         }
 
+
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT c FROM Design\Entity\Challenge c WHERE c.user = ?1');
+        $query->setParameter(1, $id);
+        $challenges = $query->getResult();
+
+
         return array('user' => $this->getEntityManager()
             ->getRepository('Application\Entity\User')
-            ->find($id));
+            ->find($id),
+            'challenges' => $challenges);
     }
 }

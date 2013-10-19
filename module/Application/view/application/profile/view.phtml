@@ -1,2 +1,29 @@
 <h1><?php echo $this->escapeHTML($this->user->displayName) ?></h1>
 <div><?php echo $this->gravatar($this->user->email) ?></div>
+<?php if (count($challenges)>0): ?>
+<div>
+    <h2><?php echo $this->escapeHTML($this->translate("Challenges Created")) ?></h2>
+
+        <ul>
+            <?php foreach ($challenges as $challenge): ?>
+                <li><a href="/design/challenge/view/<?php echo $this->escapeHtml($challenge->id) ?>">
+                        <?php echo $this->escapeHtml($challenge->challenge) ?> - <?php echo $this->escapeHtml(date("Y-m-d", $challenge->dateAdded->getTimestamp())) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+</div>
+<?php endif; ?>
+
+<div>
+    <h2><?php echo $this->escapeHTML($this->translate("User Stats")) ?></h2>
+    <ul>
+        <li>
+            <label>
+                <?php echo $this->escapeHTML($this->translate("Challenges Created:")) ?>
+            </label>
+            <?php echo count($challenges) ?>
+
+        </li>
+    </ul>
+</div>
