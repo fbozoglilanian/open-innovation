@@ -1,5 +1,4 @@
 <?php echo $this->doctype(); ?>
-
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -30,23 +29,22 @@
                     </a>
                     <a class="brand" href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Daedalus') ?></a>
                     <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="<?php echo $this->url('home') ?>"><?php echo $this->translate('Home') ?></a></li>
-                            <li><a href="<?php echo $this->url('design') ?>"><?php echo $this->translate('Design') ?></a></li>
-                            <li>
-							<?php if(!$this->zfcUserIdentity()): ?>
-								<a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Sign In'); ?></a>
-							<?php else: ?>
-							    <!-- display the 'display name' of the user -->
-							    <a href="<?php echo $this->url('zfcuser') ?>"><?php echo $this->zfcUserIdentity()->getDisplayname(); ?></a>
-							    <a href="<?php echo $this->url('zfcuser/logout') ?>"><?php echo $this->translate('Sign Out'); ?></a>
-							<?php endif?>
-							</li>
-                        </ul>
+                        <?php echo $this->navigation('navigation')->menu(); ?>
+                        <div class="profile">
+                            <?php if(!$this->zfcUserIdentity()): ?>
+                                <a href="<?php echo $this->url('zfcuser/login') ?>"><?php echo $this->translate('Sign In'); ?></a>
+                            <?php else: ?>
+                                <!-- display the 'display name' of the user -->
+                                <a href="<?php echo $this->url('zfcuser') ?>"><?php echo $this->zfcUserIdentity()->getDisplayname(); ?></a>
+                                <a href="<?php echo $this->url('zfcuser/logout') ?>" class="logout"><?php echo $this->translate('Sign Out'); ?></a>
+                            <?php endif?>
+                        </div>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
         </div>
+
+
         <div class="container">
             <?php echo $this->content; ?>
             <hr>

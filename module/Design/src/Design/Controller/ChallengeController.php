@@ -20,7 +20,7 @@ use Zend\View\Model\JsonModel;
 class ChallengeController extends AbstractActionController
 {
     /**
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     protected $em;
 
@@ -44,7 +44,7 @@ class ChallengeController extends AbstractActionController
     /**
      * Add a challenge. Requires login
      * @author fbozoglilanian
-     * @return Ambigous <\Zend\Http\Response, \Zend\Stdlib\ResponseInterface>|multitype:\Design\Form\ChallengeForm
+     * @return Mixed <\Zend\Http\Response, \Zend\Stdlib\ResponseInterface>|multitype:\Design\Form\ChallengeForm
      */
     public function addAction()
     {
@@ -93,7 +93,7 @@ class ChallengeController extends AbstractActionController
             $request = $this->getRequest();
 
             $success = FALSE;
-            $messages = array("Unknwon error");
+            $messages = array("Unknown error");
 
             if ($request->isPost()) {
                 $form = new ChallengeCommentForm();

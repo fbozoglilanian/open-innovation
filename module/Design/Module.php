@@ -45,30 +45,7 @@ class Module
     public function getServiceConfig()
     {
     	return array(
-    			'factories' => array(
-    					'Design\Model\ChallengeTable' =>  function($sm) {
-    						$tableGateway = $sm->get('ChallengeTableGateway');
-    						$table = new ChallengeTable($tableGateway);
-    						return $table;
-    					},
-    					'ChallengeTableGateway' => function ($sm) {
-    						$dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-    						$resultSetPrototype = new ResultSet();
-    						$resultSetPrototype->setArrayObjectPrototype(new Challenge());
-    						return new TableGateway('challenge', $dbAdapter, null, $resultSetPrototype);
-    					},
-    					'Design\Model\ChallengeCommentTable' =>  function($sm) {
-    					    $tableGateway = $sm->get('ChallengeCommentTableGateway');
-    					    $table = new ChallengeCommentTable($tableGateway);
-    					    return $table;
-    					},
-    					'ChallengeCommentTableGateway' => function ($sm) {
-    					    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-    					    $resultSetPrototype = new ResultSet();
-    					    $resultSetPrototype->setArrayObjectPrototype(new ChallengeComment());
-    					    return new TableGateway('challenge_comment', $dbAdapter, null, $resultSetPrototype);
-    					},
-    			),
+    			'factories' => array(),
     	);
     }
 }

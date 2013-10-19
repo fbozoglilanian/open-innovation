@@ -34,3 +34,27 @@ div.container a.brand {
     margin-left: 0;
     padding: 8px 20px 12px 40px;
 }
+
+div.nav-collapse .navigation li {
+    float:left;
+    margin-right: 5%;
+    margin-left: 5%;
+    color: lightgray;
+    list-style: none;
+}
+div.nav-collapse .navigation li.active {
+    text-decoration: underline;
+}
+
+div.nav-collapse div.profile {
+     right: 5%;
+     float: right;
+     margin-right: 5%;
+}
+div.nav-collapse div.profile a{
+    right: 5%;
+}
+div.nav-collapse div.profile a.logout{
+    color: darkgray;
+    font-size: 85%;
+}
