@@ -9,16 +9,13 @@
 
 namespace Design\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-
-use Design\Form\ChallengeForm;
-use Design\Form\ChallengeCommentForm;
-use Design\Entity\ChallengeComment;
-use Zend\View\Model\JsonModel;
-use Doctrine\ORM\EntityManager;
-
 use Design\Entity\Challenge;
+use Design\Entity\ChallengeComment;
+use Design\Form\ChallengeCommentForm;
+use Design\Form\ChallengeForm;
+use Doctrine\ORM\EntityManager;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\JsonModel;
 
 class ChallengeController extends AbstractActionController
 {
@@ -94,6 +91,7 @@ class ChallengeController extends AbstractActionController
         } else {
 
             $request = $this->getRequest();
+
             $success = FALSE;
             $messages = array("Unknwon error");
 
@@ -103,26 +101,26 @@ class ChallengeController extends AbstractActionController
 
                 $comment = new ChallengeComment();
                 $form->setInputFilter($comment->getInputFilter());
-
                 $data = $request->getPost();
-                $data["user_id"] = $this->zfcUserAuthentication()->getIdentity()->getId();
-
+                $data["challenge_id"] = (int)$data["challenge_id"];
+                $data["user_id"] = (int)$this->zfcUserAuthentication()->getIdentity()->getId();
                 $form->setData($data);
 
                 if ($form->isValid()) {
+
                     $data = $form->getData();
 
                     $data["date_added"] = new \DateTime(date("Y-m-d H:i:s", time()));
 
                     $data["challenge"] = $this->getEntityManager()
-                        ->getRepository('Design\Entity\Challenge')
+                        ->getRepository('\Design\Entity\Challenge')
                         ->find($data["challenge_id"]);
 
                     $data["user"] = $this->getEntityManager()
-                        ->getRepository('Application\Entity\User')
-                        ->find($this->zfcUserAuthentication()->getIdentity()->getId());
+                        ->getRepository('\Application\Entity\User')
+                        ->find($data["user_id"]);
 
-                    $comment->populate();
+                    $comment->populate($data);
 
                     $this->getEntityManager()->persist($comment);
                     $this->getEntityManager()->flush();
@@ -132,14 +130,12 @@ class ChallengeController extends AbstractActionController
                 } else {
                     $messages = $form->getMessages();
                     $success = FALSE;
-                    $comment = null;
                 }
 
             }
             $result = array(
                 'messages' => $messages,
-                'success' => $success,
-                'comment' => $comment
+                'success' => $success
             );
 
             $jsonModel = new JsonModel($result);
@@ -189,7 +185,6 @@ class ChallengeController extends AbstractActionController
             );
 
             $jsonModel = new JsonModel($result);
-
             echo $jsonModel->serialize();
             exit();
         }
@@ -216,7 +211,6 @@ class ChallengeController extends AbstractActionController
 
             $form->setData($data);
             $form->get('submit')->setValue('Add');
-
 
             return array(
                 'challenge' => $challenge,

@@ -1,13 +1,11 @@
 <?php
 
 namespace Design\Entity;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\InputFilter\InputFilter;
-use Zend\InputFilter\Factory as InputFactory;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -15,8 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="challenge")
  * @property datetime $dateEdited
  * @property datetime $dateAdded
- * @property Application\Entity\User $user
- * @property Design\Entity\ChallengeComment $comments
+ * @property \Application\Entity\User $user
+ * @property \Design\Entity\ChallengeComment $comments
  * @property string $motivation
  * @property string $challenge
  * @property int $id
@@ -41,7 +39,7 @@ class Challenge implements InputFilterAwareInterface
     public $motivation;
 
     /**
-     * @ORM\OneToOne(targetEntity="Application\Entity\User")
+     * @ORM\ManyToOne(targetEntity="\Application\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="user_id")
      */
     public $user;
@@ -105,7 +103,6 @@ class Challenge implements InputFilterAwareInterface
         $this->motivation = (isset($data['motivation'])) ? $data['motivation'] : "";
         $this->dateAdded = (isset($data['date_added'])) ? $data['date_added'] : null;
         $this->dateEdited = (isset($data['date_edited'])) ? $data['date_edited'] : null;
-//         $this->comments  = (isset($data['comments'])) ? $data['comments'] : array();
     }
 
     public function setInputFilter(InputFilterInterface $inputFilter)
@@ -120,7 +117,7 @@ class Challenge implements InputFilterAwareInterface
 
             $inputFilter->add(array(
                 'name' => 'challenge_id',
-                'required' => true,
+                'required' => false,
                 'filters' => array(
                     array('name' => 'Int'),
                 ),
