@@ -58,8 +58,10 @@ function loadComments() {
         url: "/design/challenge/getComments",
         data: {challenge_id: $("#challenge_id").val()},
         success: function (response) {
+
             response = JSON.parse(response);
             if (response.success) {
+                $("#comments").html("");
                 for (var i in response.comments) {
                     showComment(response.comments[i]);
                 }
